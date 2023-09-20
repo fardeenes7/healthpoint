@@ -1,0 +1,114 @@
+{% extends './base.html' %} {% load static %} {% block patient %}
+<!-- prettier-ignore -->
+<div class="flex flex-col  gap-4 ">
+    <div>
+        <script>
+            function handleSelection(value){
+                if (value == ""){
+                    window.location.href = "{% url 'patient-appointments' %}";
+                }
+                else{
+                window.location.href = "{% url 'patient-appointments' %}?status=" + value;
+                }
+            }
+        </script>
+    <div class="sm:hidden w-full">
+        <label for="tabs" class="sr-only">Select a tab</label>
+        <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+        <select onchange="handleSelection(this.value)" id="tabs" name="tabs" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+        <option value="" {% if not request.GET.status %}selected{% endif %}>All</option>
+        <option value="Pending" {% if request.GET.status == "Pending" %}selected{% endif %}>Pending</option>
+        <option value="Confirmed" {% if request.GET.status == "Confirmed" %}selected{% endif %}>Confirmed</option>
+        <option value="Completed" {% if request.GET.status == "Completed" %}selected{% endif %}>Completed</option>
+        <option value="Cancelled" {% if request.GET.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+        <option value="Expired" {% if request.GET.status == "Expired" %}selected{% endif %}>Expired</option>
+        </select>
+    </div>
+    <div class="hidden sm:block">
+        <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+            <a href="{% url 'patient-appointments' %}" class="{% if not request.GET.status %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">All</a>
+            
+            <a href="{% url 'patient-appointments' %}?status=Pending" class="{% if request.GET.status == 'Pending' %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %}  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Pending</a>
+
+            <a href="{% url 'patient-appointments' %}?status=Confirmed" class="{% if request.GET.status == 'Confirmed' %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %}  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Confirmed</a>
+
+            <a href="{% url 'patient-appointments' %}?status=Completed" class="{% if request.GET.status == 'Completed' %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %}  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" aria-current="page">Completed</a>
+
+            <a href="{% url 'patient-appointments' %}?status=Cancelled" class="{% if request.GET.status == 'Cancelled' %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %}  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Cancelled</a>
+        
+            <a href="{% url 'patient-appointments' %}?status=Expired" class="{% if request.GET.status == 'Expired' %}border-indigo-500 text-indigo-600 {% else %} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 {% endif %}  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Expired</a>     
+        </nav>
+        </div>
+    </div>
+    </div>
+
+    {% if appointments|length == 0 %}
+    <div class="mt-2 flex flex-col items-center justify-center gap-2">
+        <h1 class="text-lg font-bold text-gray-700">No Appointments Found</h1>
+        <a href="{% url 'specialities' %}" class="text-sm bg-indigo-500 hover:bg-indigo-600 text-white active:scale-95 rounded-lg font-bold py-2 px-4">Book an appointment now</a>
+    </div>
+    {% endif %}
+
+{% for appointment in appointments %}
+<article class="flex bg-white transition hover:shadow-xl">
+    <div class="rotate-180 p-2 [writing-mode:_vertical-lr]">
+        <time
+            datetime="2022-10-10"
+            class="flex items-center justify-between gap-4 text-xs font-bold uppercase text-gray-900"
+        >
+            <span>{{appointment.date | date:'Y'}}</span>
+            <span class="w-px flex-1 bg-gray-900/10"></span>
+            <span>{{appointment.date | date:'d M'}}</span>
+        </time>
+    </div>
+
+    <div class="hidden sm:block sm:basis-56">
+        <img
+            alt="Guitar"
+            src="/media/{{ appointment.doctor.image }}"
+            class="aspect-square h-full w-full object-cover"
+        />
+    </div>
+
+    <div class="flex flex-1 flex-col justify-between">
+        <div
+            class="border-s border-gray-900/10 p-4 sm:border-l-transparent sm:p-6"
+        >
+        <h1 class="font-bold text-gray-700">{{appointment.date}} - {{appointment.time | date:'h:i A'}}</h1>
+            <a href="{% url 'doctor' appointment.doctor.id %}" target="_blank">
+                <h3 class="mt-2 font-bold uppercase text-gray-900">
+                    {{ appointment.doctor.name }}
+                </h3>
+            </a>
+
+            <p class="line-clamp-3 text-sm/relaxed text-gray-700">
+                {{ appointment.doctor.speciality }}
+            </p>
+            <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-700">
+                <span class="font-bold">Appointment ID:</span> {{ appointment.id }}
+            </p>
+            <p class="mt-1 line-clamp-3 text-sm/relaxed text-gray-700">
+                <span class="font-bold">Note:</span> {{ appointment.note }}
+            </p>
+            
+            
+        </div>
+
+        <div class="sm:flex sm:items-end sm:justify-end">
+            <span
+                class="block {% if appointment.status == 'Pending' %}bg-yellow-300{% elif appointment.status == 'Completed' or appointment.status == 'Confirmed' %}bg-green-300{% elif appointment.status == 'Cancelled' %}bg-red-300{%endif%} px-5 py-3 text-center text-xs font-bold uppercase text-gray-900 transition hover:bg-yellow-400"
+            >
+            {%  if appointment.status == 'Pending' and appointment.date < today %}
+                Expired
+                {% else %}
+                {{ appointment.status }}
+            {% endif %}
+        </span>
+        </div>
+    </div>
+</article>
+{% endfor %}
+</div>
+{% endblock %}

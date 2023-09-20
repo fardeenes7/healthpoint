@@ -1,0 +1,325 @@
+{% extends '../base.html' %} {% block main %}{% load static %}
+<div class="">
+    <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+    <div
+        id="mobile-menu"
+        class="print:hidden fixed inset-0 flex z-20 md:hidden hidden"
+        role="dialog"
+        aria-modal="true"
+    >
+        <!--
+      Off-canvas menu overlay, show/hide based on off-canvas menu state.
+
+      Entering: "transition-opacity ease-linear duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "transition-opacity ease-linear duration-300"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+        <div
+            class="fixed inset-0 bg-gray-600 bg-opacity-75"
+            aria-hidden="true"
+        ></div>
+
+        <!--
+      Off-canvas menu, show/hide based on off-canvas menu state.
+
+      Entering: "transition ease-in-out duration-300 transform"
+        From: "-translate-x-full"
+        To: "translate-x-0"
+      Leaving: "transition ease-in-out duration-300 transform"
+        From: "translate-x-0"
+        To: "-translate-x-full"
+    -->
+        <div
+            class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-indigo-700"
+        >
+            <!--
+        Close button, show/hide based on off-canvas menu state.
+
+        Entering: "ease-in-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in-out duration-300"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+            <div class="absolute top-0 right-0 -mr-12 pt-2">
+                <button
+                    type="button"
+                    onclick="toggleMobileMenu()"
+                    class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                >
+                    <span class="sr-only">Close sidebar</span>
+                    <!-- Heroicon name: outline/x -->
+                    <svg
+                        class="h-6 w-6 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex-shrink-0 flex items-center px-4">
+                <a href="{% url 'doctor-dashboard' }">
+                    <img
+                        class="h-8 w-auto"
+                        src="{% static 'images/logo/logo.svg' %}"
+                        alt="Healthpoint Logo"
+                    />
+                </a>
+            </div>
+            <div class="mt-5 flex-1 h-0 overflow-y-auto">
+                <nav class="px-2 space-y-1">
+                    {% with url_name=request.resolver_match.url_name %}
+                    <!-- Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:bg-indigo-600" -->
+                    <a
+                        href="{% url 'doctor-dashboard' %}"
+                        class="{% if url_name == 'doctor-dashboard' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-house mr-3"></i>
+                        Dashboard
+                    </a>
+
+                    <a
+                        href="{% url 'doctor-appointments' %}"
+                        class="{% if url_name == 'doctor-appointments' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-clock mr-3"></i>
+                        Appointments
+                    </a>
+
+                    <a
+                        href="{% url 'doctor-patients-list' %}"
+                        class="{% if url_name == 'doctor-patients-list' or url_name == 'doctor-patient' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-users mr-3"></i>
+                        Patients
+                    </a>
+                    <a
+                        href="{% url 'doctor-profile' %}"
+                        class="{% if url_name == 'doctor-profile' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-user mr-3"></i>
+                        Profile
+                    </a>
+
+                    <button
+                        onclick="toggleLogoutModal()"
+                        class="w-full text-indigo-100 hover:bg-indigo-600 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i
+                            class="w-6 fa-solid fa-arrow-right-from-bracket mr-3"
+                        ></i>
+                        Logout
+                    </button>
+                    {% endwith %}
+                </nav>
+            </div>
+        </div>
+
+        <div class="flex-shrink-0 w-14" aria-hidden="true">
+            <!-- Dummy element to force sidebar to shrink to fit close icon -->
+        </div>
+    </div>
+
+    <!-- Static sidebar for desktop -->
+    <div
+        class="print:hidden hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0"
+    >
+        <!-- Sidebar component, swap this element with another sidebar if you like -->
+        <div class="flex flex-col flex-grow pt-5 bg-indigo-700 overflow-y-auto">
+            <div class="flex items-center flex-shrink-0 px-4">
+                <a href="{% url 'doctor-dashboard' %}">
+                    <img
+                        class="h-8 w-auto"
+                        src="{% static 'images/logo/logo.svg' %}"
+                        alt="Healthpoint"
+                /></a>
+            </div>
+            <div class="mt-5 flex-1 flex flex-col">
+                <nav class="flex-1 px-2 pb-4 space-y-1">
+                    {% with url_name=request.resolver_match.url_name %}
+                    <!-- Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:bg-indigo-600" -->
+                    <a
+                        href="{% url 'doctor-dashboard' %}"
+                        class="{% if url_name == 'doctor-dashboard' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-house mr-3"></i>
+                        Dashboard
+                    </a>
+
+                    <a
+                        href="{% url 'doctor-appointments' %}"
+                        class="{% if url_name == 'doctor-appointments' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-clock mr-3"></i>
+                        Appointments
+                    </a>
+
+                    <a
+                        href="{% url 'doctor-patients-list' %}"
+                        class="{% if url_name == 'doctor-patients-list' or url_name == 'doctor-patient' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-users mr-3"></i>
+                        Patients
+                    </a>
+                    <a
+                        href="{% url 'doctor-profile' %}"
+                        class="{% if url_name == 'doctor-profile' %}bg-indigo-800 text-white{% else %}text-indigo-100 hover:bg-indigo-600{% endif %} group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i class="w-6 fa-solid fa-user mr-3"></i>
+                        Profile
+                    </a>
+
+                    <button
+                        onclick="toggleLogoutModal()"
+                        class="w-full text-indigo-100 hover:bg-indigo-600 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <i
+                            class="w-6 fa-solid fa-arrow-right-from-bracket mr-3"
+                        ></i>
+                        Logout
+                    </button>
+                    {% endwith %}
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="md:pl-64 flex flex-col flex-1">
+        <div
+            class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow print:hidden"
+        >
+            <button
+                type="button"
+                onclick="toggleMobileMenu()"
+                class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            >
+                <span class="sr-only">Open sidebar</span>
+                <!-- Heroicon name: outline/menu-alt-2 -->
+                <svg
+                    class="h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h7"
+                    />
+                </svg>
+            </button>
+            <div class="flex-1 px-4 flex justify-between">
+                <div class="flex-1 flex">
+                    <form class="w-full flex md:ml-0" action="#" method="GET">
+                        <label for="search-field" class="sr-only">Search</label>
+                        <div
+                            class="relative w-full flex items-center text-gray-400 focus-within:text-gray-600"
+                        >
+                            <h2 class="text-lg font-bold ml-4">
+                                Welcome, {{user.doctor.name}}
+                            </h2>
+                        </div>
+                    </form>
+                </div>
+                <div class="ml-4 flex items-center md:ml-6">
+                    <div class="ml-3 relative">
+                        <div>
+                            <button
+                                type="button"
+                                class="rounded-lg flex text-sm font-bold border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 px-4 py-1 text-black font-bold flex items-center justify-between gap-2"
+                                id="user-menu-button"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                onclick="toggleUserMenu()"
+                            >
+                                <!-- prettier-ignore -->
+                                <img id="" class="object-contain h-8 w-8 rounded-full" src="/media/{{user.get_profile_picture}}"/>
+                                <span>
+                                    <!-- prettier-ignore -->
+                                    {% if user.first_name %} {{user.first_name}} {% else %} {{user.username}} {% endif %}
+                                    <i class="w-6 fa-solid fa-chevron-down"></i
+                                ></span>
+                            </button>
+                        </div>
+
+                        <div
+                            id="user-menu"
+                            class="hidden z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu"
+                            aria-orientation="vertical"
+                            aria-labelledby="user-menu-button"
+                            tabindex="-1"
+                        >
+                            <!-- Active: "bg-gray-100", Not Active: "" -->
+
+                            <a
+                                href="{% url 'doctor-dashboard' %}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold"
+                                role="menuitem"
+                                tabindex="-1"
+                                id="user-menu-item-1"
+                                >Dashboard</a
+                            >
+                            <button
+                                href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left font-semibold"
+                                role="menuitem"
+                                tabindex="-1"
+                                id="user-menu-item-2"
+                                onclick="toggleLogoutModal(), toggleUserMenu()"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                    <!-- Replace with your content -->
+                    {% block doctor %} {% endblock %}
+                    <!-- /End replace -->
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+    function toggleMobileMenu() {
+        let menu = document.getElementById("mobile-menu");
+        if (menu.classList.contains("hidden")) {
+            menu.classList.remove("hidden");
+        } else {
+            menu.classList.add("hidden");
+        }
+    }
+    function toggleUserMenu() {
+        const usermenu = document.getElementById("user-menu");
+        if (usermenu.classList.contains("hidden")) {
+            usermenu.classList.remove("hidden");
+        } else {
+            usermenu.classList.add("hidden");
+        }
+    }
+</script>
+
+{% include '../landing/auth/logoutModal.html' %} {% endblock %}

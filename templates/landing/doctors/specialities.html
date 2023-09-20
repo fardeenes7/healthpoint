@@ -1,0 +1,30 @@
+{% extends '../base.html' %} {% block content %} {% load static %}
+<div class="lg:w-7xl max-w-7xl lg:mx-auto mx-2">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for speciality in specialities %}
+        <a
+            class="bg-white relative flex items-start justify-between rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8 hover:bg-indigo-500 hover:border-black hover:text-white transition-all duration-300 group"
+            href="{% url 'doctorlist' speciality.slug %}"
+        >
+            <div class="pt-4 text-gray-500">
+                <img
+                    class="h-8 w-8 sm:h-10 sm:w-10 group-hover:invert group-hover:contrast-200"
+                    src="/media/{{speciality.icon}}"
+                    alt=""
+                />
+
+                <h3
+                    class="mt-4 text-lg font-bold text-gray-900 group-hover:text-white sm:text-xl"
+                >
+                    {{ speciality.name }}
+                </h3>
+
+                <p class="mt-2 hidden text-sm sm:block group-hover:text-white">
+                    Click to see all doctors for {{ speciality.name }}
+                </p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

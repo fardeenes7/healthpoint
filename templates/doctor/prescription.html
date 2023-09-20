@@ -1,0 +1,320 @@
+{% extends './base.html' %} {% block doctor %}
+<div>
+    <div
+        id="prescription"
+        class="flex flex-col h-full print:block max-w-7xl mx-auto px-4 sm:px-6 md:px-8 bg-white shadow-md rounded-lg p-4 print:rounded-none print:m-0 print:shadow-none print:border-0 print:py-0 print:px-0"
+    >
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="action" value="update" hidden>
+            <div
+                class="grid grid-cols-3 border-b-2 border-black py-4 print:pt-0"
+            >
+                <div class="text-sm">
+                    <h1 class="font-bold">{{prescription.doctor.name}}</h1>
+
+                    <p>{{prescription.doctor.speciality.name}}</p>
+                    <p>{{prescription.doctor.degree}}</p>
+                </div>
+                <div>
+                    <h1 class="font-bold text-center text-2xl">Healthpoint</h1>
+                </div>
+                <div class="text-right text-sm">
+                    <h1 class="font-bold">Healthpoint Clinic</h1>
+                    <p>Phone: 01712345678</p>
+                    <p>Address: 123, ABC Road, Dhaka</p>
+                </div>
+            </div>
+            <div
+                class="grid grid-cols-4 mt-4 text-sm pb-2 border-b border-gray-800"
+            >
+                <div class="col-span-2">
+                    <p>
+                        <span class="font-bold">Date:</span>
+                        {{prescription.date}}
+                    </p>
+                    <h1 class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Name:</span>
+                        <span class="hidden print:block">
+                            {{prescription.name}}</span
+                        >
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{prescription.name}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                    </h1>
+                    <p class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Email: </span
+                        ><span class="hidden print:block">
+                            {{prescription.email}}</span
+                        ><input
+                            type="email"
+                            name="email"
+                            value="{{prescription.email}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                    </p>
+                    <p class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Address: </span
+                        ><input
+                            type="address"
+                            name="address"
+                            value="{{prescription.address}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                        <span class="hidden print:block"
+                            >{{prescription.address}}</span
+                        >
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <span class="font-bold">Prescription ID: </span
+                        >{{prescription.id}}
+                    </p>
+                    <h1 class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Age:</span>
+                        <span class="hidden print:block"
+                            >{{prescription.age}}</span
+                        >
+                        <input
+                            type="number"
+                            name="age"
+                            value="{{prescription.age}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                    </h1>
+                    <p class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Phone: </span
+                        ><span class="hidden print:block"
+                            >{{prescription.phone}}</span
+                        ><input
+                            type="phone"
+                            name="phone"
+                            value="{{prescription.phone}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                    </p>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{url}}prescriptions?id={{prescription.id}}"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <div class="grid grid-cols-4 text-sm">
+                <div class="py-2 pr-4">
+                    <div>
+                        <h2 class="mb-2 mt-4 font-bold">Chief Complaints:</h2>
+                        <p class="hidden print:block">{{prescription.cc}}</p>
+                        <textarea
+                            class="text-sm w-full print:hidden"
+                            name="cc"
+                            id="cc"
+                            cols="15"
+                        >
+{{prescription.cc}}</textarea
+                        >
+                    </div>
+                    <div>
+                        <h2 class="mb-2 mt-4 font-bold">Diagnosis:</h2>
+                        <p class="hidden print:block">
+                            {{prescription.diagnosis}}
+                        </p>
+                        <textarea
+                            class="text-sm w-full print:hidden"
+                            name="diagnosis"
+                            id="diagnosis"
+                            cols="15"
+                        >
+{{prescription.diagnosis}}</textarea
+                        >
+                    </div>
+                    <div>
+                        <h2 class="mb-2 mt-4 font-bold">Tx:</h2>
+                        <p class="hidden print:block">{{prescription.tx}}</p>
+                        <textarea
+                            class="text-sm w-full print:hidden"
+                            name="tx"
+                            id="tx"
+                            cols="15"
+                        >
+{{prescription.tx}}</textarea
+                        >
+                    </div>
+                </div>
+                <div class="col-span-3 border-l-2 border-black p-4">
+                    <div>
+                        <i class="mt-2 fa-solid fa-prescription text-xl"></i>
+                        <!-- This example requires Tailwind CSS v2.0+ -->
+                        <div class="px-4 sm:px-6 lg:px-8">
+                            <div class="mt-2 flex flex-col">
+                                <div
+                                    class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8"
+                                >
+                                    <div
+                                        class="inline-block min-w-full py-2 align-middle"
+                                    >
+                                        <div
+                                            class="overflow-hidden ring-1 ring-black ring-opacity-5 md:rounded-lg"
+                                        >
+                                            <table
+                                                class="min-w-full divide-y divide-gray-300"
+                                            >
+                                                <thead class="bg-gray-50">
+                                                    <tr>
+                                                        <th
+                                                            scope="col"
+                                                            class="py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                                        >
+                                                            Name
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-3 py-2 text-left text-sm font-semibold text-gray-900"
+                                                        >
+                                                            Dosage
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-3 py-2 text-left text-sm font-semibold text-gray-900"
+                                                        >
+                                                            Duration
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-3 py-2 text-left text-sm font-semibold text-gray-900"
+                                                        >
+                                                            Note
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody
+                                                    class="divide-y divide-gray-200 bg-white"
+                                                >
+                                                    <!-- prettier-ignore -->
+                                                    {% for medicine in medications %}
+                                                    <tr>
+                                                        <td
+                                                            class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                                                        >
+                                                            {{medicine.name}}
+                                                        </td>
+                                                        <td
+                                                            class="whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                                                        >
+                                                            {{medicine.dosage}}
+                                                        </td>
+                                                        <td
+                                                            class="whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                                                        >
+                                                            {{medicine.duration}}
+                                                            Days
+                                                        </td>
+                                                        <td
+                                                            class="whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                                                        >
+                                                            {{medicine.note}}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            id="add_medicine_btn"
+                            type="button"
+                            onclick="add_medicine_toggle()"
+                            class="mt-4 w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Add Medicine
+                        </button>
+                    </div>
+                    <div>
+                        <h2 class="mb-2 mt-4 font-bold">Advice:</h2>
+                        <p class="hidden print:block">
+                            {{prescription.advice}}
+                        </p>
+                        <textarea
+                            class="text-sm w-full print:hidden"
+                            name="advice"
+                            id="advice"
+                            cols="15"
+                        >
+{{prescription.advice}}</textarea
+                        >
+                    </div>
+                    <p class="mt-2 flex items-center">
+                        <span class="font-bold mr-2">Followup: </span
+                        ><input
+                            type="date"
+                            name="followup"
+                            value="{{prescription.followup|date:'Y-m-d'}}"
+                            class="text-sm p-1 border border-gray-800 print:hidden"
+                        />
+                        <span class="hidden print:block"
+                            >{{prescription.followup}}</span
+                        >
+                    </p>
+                </div>
+            </div>
+            <div class="mt-auto fixed bottom-0 hidden print:block w-full">
+                <div class="">
+                    <div class="border-t-2 border-black">
+                        <p class="text-xs font-bold text-center mt-2">
+                            This prescription is generated online, therefore no
+                            signature is required
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="print:hidden w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 px-4 rounded"
+            >
+                Update
+            </button>
+        </form>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+            onclick="print()"
+            class="print:hidden w-full bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold py-2 px-4 rounded mt-4"
+        >
+            Print Prescription
+        </button>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="send_email" />
+            <button
+                type="submit"
+                class="print:hidden w-full bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold py-2 px-4 rounded mt-4"
+            >
+                Send Email to Patient
+            </a>
+        </form>
+    </div>
+</div>
+
+{% include './add_medicine.html' %}
+<script>
+    function add_medicine_toggle() {
+        var form = document.getElementById("add_medicine_form");
+        if (form.style.display === "none") {
+            form.style.display = "block";
+            document.getElementById("add_medicine_btn").innerHTML = "Cancel";
+        } else {
+            form.style.display = "none";
+            document.getElementById("add_medicine_btn").innerHTML =
+                "Add Medicine";
+        }
+    }
+</script>
+{% endblock %}

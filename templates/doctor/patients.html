@@ -1,0 +1,41 @@
+{% extends './base.html' %} {% block doctor %}
+<!-- This example requires Tailwind CSS v2.0+ -->
+<ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {% for patient in patients %}
+    <li
+        class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200 hover:shadow-lg hover:border"
+    >
+        <a href="{% url 'doctor-patient' patient.id %}">
+            <div class="w-full flex items-center justify-between p-6 space-x-6">
+                <div class="flex-1 truncate">
+                    <div class="flex items-center space-x-3">
+                        <h3 class="text-gray-900 text-sm font-bold truncate">
+                            {{patient.name}}
+                        </h3>
+                        <span
+                            class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full"
+                            >{{patient.age}} years</span
+                        >
+                    </div>
+                    <p class="mt-1 text-gray-500 text-sm truncate">
+                        {{patient.address}}
+                    </p>
+                    <p class="mt-1 text-gray-500 text-sm truncate">
+                        {{patient.user.email}}
+                    </p>
+                    <p class="mt-1 text-gray-500 text-sm truncate">
+                        {{patient.phone}}
+                    </p>
+                </div>
+                <img
+                    class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
+                    src="/media/{{ patient.image }}"
+                    alt=""
+                />
+            </div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

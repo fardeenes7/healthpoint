@@ -1,0 +1,255 @@
+{% extends '../base.html' %} {% block content %} {% load static %}
+<div class="w-full lg:w-7xl mx-2 lg:mx-auto">
+    <!--
+  Heads up! 👋
+
+  Plugins:
+    - @tailwindcss/forms
+-->
+
+    <section>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <h1 class="sr-only">Checkout</h1>
+
+            <div
+                class="mx-auto grid max-w-screen-2xl grid-cols-1 md:grid-cols-2"
+            >
+                <div class="bg-gray-50 py-12 md:py-24">
+                    <div class="mx-auto max-w-lg space-y-8 px-4 lg:px-8">
+                        <div class="flex items-center gap-4">
+                            <img
+                                class="h-16 w-16 rounded-full bg-blue-700"
+                                src="/media/{{doctor.image}}"
+                                alt="{{doctor.name}}"
+                            />
+
+                            <div class="flex flex-col">
+                                <h2 class="font-bold text-gray-900">
+                                    {{doctor.name}}
+                                </h2>
+                                <h3 class="mt-1 text-sm">
+                                    {{doctor.speciality.name}}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p
+                                class="text-2xl font-medium tracking-tight text-gray-900"
+                            >
+                                {% if is_first_visit %} BDT
+                                {{doctor.consultation}} {% else %} BDT
+                                {{doctor.followup}} {% endif %}
+                            </p>
+
+                            <p class="mt-1 text-sm text-gray-600">
+                                For {% if is_first_visit %} First Visit
+                                <!-- prettier-ignore -->
+                                {% else %} Followup {% endif %}
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flow-root">
+                                <h1 class="font-semibold">
+                                    Please select date and time for your visit
+                                </h1>
+                                <div class="mt-2">
+                                    <label
+                                        for="date"
+                                        class="block text-sm font-medium text-gray-900"
+                                    >
+                                        Select Date
+                                    </label>
+
+                                    <select
+                                        name="date"
+                                        id="date"
+                                        class="mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm"
+                                        onchange="getTimeslots(this.value, this.options[this.selectedIndex].getAttribute('data-slots'))"
+                                        required
+                                    >
+                                        <option value="">Please select</option>
+                                        <!-- prettier-ignore -->
+                                        {% for date, data in dates.items %}
+                                        <option
+                                            value="{{date}}"
+                                            data-slots="{{data.slots}}"
+                                        >
+                                            {{data.date}} - {{data.day}}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mt-2">
+                                    <label
+                                        for="time"
+                                        class="block text-sm font-medium text-gray-900"
+                                    >
+                                        Select Time Slot
+                                    </label>
+
+                                    <select
+                                        name="time"
+                                        id="time"
+                                        class="mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm"
+                                        disabled
+                                        required
+                                    >
+                                        <option value="">
+                                            Please select date first
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white py-12 md:py-24">
+                    <div class="mx-auto max-w-lg px-4 lg:px-8">
+                        <div class="grid grid-cols-6 gap-4">
+                            <div class="col-span-6">
+                                <label
+                                    for="FirstName"
+                                    class="block text-xs font-medium text-gray-700"
+                                >
+                                    Patient's Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="FirstName"
+                                    name="name"
+                                    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                    value="{{patient.name}}"
+                                    required
+                                />
+                            </div>
+
+                            <div class="col-span-6">
+                                <label
+                                    for="Email"
+                                    class="block text-xs font-medium text-gray-700"
+                                >
+                                    Patient's Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="Email"
+                                    name="email"
+                                    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                    placeholder="Enter patient's email"
+                                    value="{{patient.user.email}}"
+                                />
+                            </div>
+
+                            <div class="col-span-6">
+                                <label
+                                    for="Phone"
+                                    class="block text-xs font-medium text-gray-700"
+                                >
+                                    Patient's Phone
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="Phone"
+                                    name="phone"
+                                    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                    placeholder="Enter patient's phone number"
+                                    value="{{patient.phone}}"
+                                    required
+                                />
+                            </div>
+                            <div class="col-span-6">
+                                <label
+                                    for="age"
+                                    class="block text-xs font-medium text-gray-700"
+                                >
+                                    Patients Age
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="age"
+                                    name="age"
+                                    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                    placeholder="Enter patients age"
+                                    value="{{patient.age}}"
+                                    required
+                                />
+                            </div>
+
+                            <div class="col-span-6">
+                                <label
+                                    class="block text-sm font-medium text-gray-700"
+                                >
+                                    Patient's Address
+                                </label>
+
+                                <div
+                                    class="mt-1 -space-y-px rounded-md bg-white shadow-sm"
+                                >
+                                    <div>
+                                        <label class="sr-only" for="PostalCode">
+                                            Address
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="address"
+                                            name="address"
+                                            placeholder="Address"
+                                            class="relative w-full rounded-md border-gray-200 focus:z-10 sm:text-sm"
+                                            value="{{patient.address}}"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-6">
+                                <button
+                                    type="submit"
+                                    class="block w-full rounded-md bg-indigo-500 hover:indigo-600 active:scale-95 p-2.5 text-sm text-white transition hover:shadow-lg font-bold"
+                                >
+                                    Book Appointment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+{% if message %}
+<script>
+    alert("{{status}}: {{message}}");
+</script>
+{% endif %}
+<script type="text/javascript">
+    function getTimeslots(date, slots) {
+        if (date) {
+            const data = JSON.parse(slots);
+            document.getElementById("time").disabled = false;
+            document.getElementById("time").innerHTML =
+                '<option value="">Please select time</option>';
+            Object.entries(data).forEach((entry) => {
+                const [key, value] = entry;
+                disabled = value == "booked" ? "disabled" : "";
+                booked = value == "booked" ? " (Booked)" : "";
+                // prettier-ignore
+                document.getElementById("time").innerHTML +=
+                    '<option value="' + key + '" '+ disabled+'>' + key + booked + "</option>";
+            });
+        } else {
+            document.getElementById("time").disabled = true;
+            document.getElementById("time").innerHTML =
+                '<option value="">Please select date first</option>';
+        }
+    }
+</script>
+{% endblock %}

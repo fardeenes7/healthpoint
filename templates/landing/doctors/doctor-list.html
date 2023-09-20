@@ -1,0 +1,60 @@
+{% extends '../base.html' %} {% block content %}
+<div class="lg:w-7xl max-w-7xl lg:mx-auto mx-2">
+    {% if doctors|length == 0 %}
+    <div class="">
+        <h1 class="text-2xl font-bold text-center">
+            No Doctors Found for this Speciality
+        </h1>
+    </div>
+    {% elif all_doctor == True %}
+    <div class="">
+        <h1 class="text-2xl font-bold text-center">All Doctors List</h1>
+    </div>
+    {% else %}
+    <div class="">
+        <h1 class="text-2xl font-bold text-center">
+            Doctors for {{doctors.0.speciality.name}}
+        </h1>
+    </div>
+    {% endif %}
+    <div class="grid grid-cols-2 gap-4 mt-8">
+        {% for doctor in doctors %}
+        <a href="{% url 'doctor' doctor.id  %}">
+            <div
+                class="w-full h-full bg-white grid grid-cols-3 rounded-xl group hover:bg-indigo-500 hover:text-white transition-all duration-100 shadow-xl"
+            >
+                <div class="w-full h-full rounded-xl overflow-hidden p-2">
+                    <img
+                        class="object-fit rounded-xl"
+                        src="/media/{{doctor.image}}"
+                        alt=""
+                    />
+                </div>
+                <div class="col-span-2 p-4 flex flex-col justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold">{{doctor.name}}</h1>
+                        <h2 class="">{{doctor.degree}}</h2>
+                        <span
+                            class="bg-indigo-500 text-white px-2 py-1 text-xs font-bold rounded-xl group-hover:bg-white group-hover:text-indigo-500"
+                        >
+                            {{doctor.speciality}}
+                        </span>
+                    </div>
+                    <div>
+                        <p
+                            class="text-2xl text-indigo-500 font-bold group-hover:text-white"
+                        >
+                            BDT {{doctor.consultation}}
+                            <span class="text-sm">For First Visit</span>
+                        </p>
+                        <p class="text-sm text-gray-500 group-hover:text-white">
+                            Then BDT {{doctor.followup}} onwards
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

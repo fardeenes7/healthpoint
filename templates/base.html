@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Healthpoint</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&family=Poppins&display=swap"
+            rel="stylesheet"
+        />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'fontawesome/all.css' %}" />
+        <script src="{% static 'fontawesome/all.js' %}"></script>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+        <link rel="stylesheet" href="{% static  'css/base.css'%}" />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {},
+                        fontFamily: {
+                            sans: ['"Hind Siliguri"', "sans-serif"],
+                            display: ['"Poppins"', "sans-serif"],
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="font-display min-h-screen bg-gray-100">
+        {% block main %}{% endblock %} {% include './messages.html' %}
+    </body>
+</html>

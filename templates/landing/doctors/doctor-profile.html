@@ -1,0 +1,79 @@
+{% extends '../base.html' %} {% block content %}
+<div class="lg:w-7xl max-w-7xl lg:mx-auto mx-2 md:mx-4 min-mx-2">
+    <div
+        class="w-full bg-white shadow-md rounded-2xl grid md:grid-cols-3 lg:grid-cols-5 gap-8 p-8 border"
+    >
+        <div>
+            <img class="rounded-2xl" src="/media/{{doctor.image}}" alt="" />
+        </div>
+        <div class="md:col-span-2 lg:col-span-3">
+            <h1 class="text-2xl font-bold">{{doctor.name}}</h1>
+            <p class="mt-2">{{doctor.speciality.name}}</p>
+            <p class="mt-2">{{doctor.degree}}</p>
+            <p class="mt-2">
+                <span class="text-gray-700">Currently working at </span
+                ><span class="font-bold">{{doctor.workplace}}</span>
+            </p>
+        </div>
+        <div class="lg:row-span-2 flex flex-col items-start justify-center">
+            <p>
+                BDT
+                <span class="text-indigo-500 font-bold text-4xl"
+                    >{{doctor.consultation}}</span
+                >
+                For First Visit*
+            </p>
+            <p></p>
+            <p>BDT <span>{{doctor.followup}}</span> For Followups</p>
+            <a
+                href="{% url 'book-appointment' doctor.id %}"
+                class="mt-2 px-4 py-2 bg-indigo-500 text-white font-bold hover:bg-indigo-600 rounded-md"
+            >
+                Book Appointment
+            </a>
+        </div>
+        <div
+            class="md:col-span-2 lg:col-span-4 flex flex-col md:flex-row lg:gap-16 lg:items-center justify-start border-t-2 pt-4"
+        >
+            <div class="mt-4 lg:mt-0">
+                <p class="text-lg text-gray-800">BMDC</p>
+                <p class="text-xl font-bold lg:mt-2">{{doctor.bmdc}}</p>
+            </div>
+            <div class="mt-4 lg:mt-0">
+                <p class="text-lg text-gray-800">Total Patients Attended</p>
+                <p class="text-xl font-bold lg:mt-2">{{patient_count}}</p>
+            </div>
+            <div class="mt-4 lg:mt-0">
+                <p class="text-lg text-gray-800">Joined Healthpoint</p>
+                <p class="text-xl font-bold lg:mt-2">
+                    {{doctor.user.date_joined | date:"d M, Y"}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 grid grid-cols-3 gap-4">
+        <div class="bg-white shadow-lg rounded-xl col-span-2 p-4">
+            <h1 class="text-2xl font-bold">About {{doctor.name}}</h1>
+            <p class="mt-2">{{doctor.bio}}</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-xl p-4 flex flex-col">
+            <h1 class="text-2xl font-bold">Availability</h1>
+            {% for schedule in schedules %}
+            <div class="mt-2">
+                <p class="font-bold">{{schedule.day}}</p>
+                <p class="">
+                    <!-- prettier-ignore -->
+                    {{schedule.start_time | date:"h:i A"}} - {{schedule.end_time| date:"h:i A"}}
+                </p>
+            </div>
+            {% endfor %}
+            <a
+                href="{% url 'book-appointment' doctor.id %}"
+                class="text-center mt-4 px-4 py-2 bg-indigo-500 text-white font-bold hover:bg-indigo-600 rounded-md"
+            >
+                Book Appointment
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

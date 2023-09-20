@@ -1,0 +1,149 @@
+{% extends './base.html' %} {% block doctor %}
+
+<h1 class="text-2xl font-semibold text-gray-900">Welcome, {{doctor.name}}</h1>
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div>
+    <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div
+            class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+        >
+            <dt class="text-sm font-medium text-gray-500 truncate">
+                Appointments Today
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{stats.appointments_today}}
+            </dd>
+        </div>
+
+        <div
+            class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+        >
+            <dt class="text-sm font-medium text-gray-500 truncate">
+                Total Patients
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{stats.total_patients}}
+            </dd>
+        </div>
+
+        <div
+            class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+        >
+            <dt class="text-sm font-medium text-gray-500 truncate">
+                Total Consultations
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{stats.total_consultations}}
+            </dd>
+        </div>
+    </dl>
+</div>
+<div class="mt-4 flex flex-col gap-4">
+    {% if appointments|length == 0 %}
+    <div class="mt-8">
+        <h1 class="text-2xl font-semibold text-gray-900">
+            No Appointments Today
+        </h1>
+    </div>
+    {% endif %} {% for appointment in appointments %}
+    <article class="flex bg-white transition hover:shadow-xl">
+        <div class="rotate-180 p-2 [writing-mode:_vertical-lr]">
+            <time
+                datetime="2022-10-10"
+                class="flex items-center justify-between gap-4 text-xs font-bold uppercase text-gray-900"
+            >
+                <span>{{appointment.date | date:'Y'}}</span>
+                <span class="w-px flex-1 bg-gray-900/10"></span>
+                <span>{{appointment.date | date:'d M'}}</span>
+            </time>
+        </div>
+
+        <div class="hidden sm:block sm:basis-64">
+            <img
+                alt="Patient Profile Picture"
+                src="/media/{{ appointment.patient.image }}"
+                class="aspect-square h-full w-full object-cover"
+            />
+        </div>
+
+        <div class="flex flex-1 flex-col justify-between">
+            <div
+                class="border-s border-gray-900/10 p-4 sm:border-l-transparent sm:p-6"
+            >
+                <h1 class="font-bold text-gray-700">
+                    {{appointment.date}} - {{appointment.time | date:'h:i A'}}
+                </h1>
+                <a
+                    href="{% url 'doctor-patient' appointment.patient.id %}"
+                    target="_blank"
+                >
+                    <h3 class="mt-2 font-bold uppercase text-gray-900">
+                        {{ appointment.patient.name }}
+                    </h3>
+                </a>
+                <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-700">
+                    <span class="font-bold">Appointment ID:</span>
+                    {{ appointment.id }}
+                </p>
+                <p class="mt-1 line-clamp-3 text-sm/relaxed text-gray-700">
+                    <span class="font-bold">Note:</span> {{ appointment.note }}
+                </p>
+            </div>
+            <div class="px-4 sm:px-6">
+                <form
+                    action="{% url 'create-prescription' appointment.patient.id %}"
+                    method="POST"
+                >
+                    {% csrf_token %}
+                    <input name="name" value="{{ appointment.name }}" hidden />
+                    <input name="age" value="{{ appointment.age }}" hidden />
+                    <input
+                        name="email"
+                        value="{% if appointment.email %}{{appointment.email}}{% else %}{{appointment.patient.user.email}}{% endif %}"
+                        hidden
+                    />
+                    <input
+                        name="phone"
+                        value="{{ appointment.phone }}"
+                        hidden
+                    />
+                    <input
+                        name="address"
+                        value="{{ appointment.address }}"
+                        hidden
+                    />
+                    <input
+                        name="appointment"
+                        value="{{ appointment.id }}"
+                        hidden
+                    />
+                    {% if appointment.status == "Pending" %}
+                    <button
+                        class="text-sm mt-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 px-4 py-2 text-white font-bold"
+                    >
+                        Begin Consultation
+                    </button>
+                    {% elif appointment.status == "Completed" %}
+                    <a
+                        href="{% url 'doctor-prescription' appointment.prescription.all.0.id  %}"
+                        class="text-sm mt-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 px-4 py-2 text-white font-bold"
+                    >
+                        View Prescription
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="sm:flex sm:items-end sm:justify-end">
+                <span
+                    class="block {% if appointment.status == 'Pending' %}bg-yellow-300{% elif appointment.status == 'Completed' or appointment.status == 'Confirmed' %}bg-green-300{% elif appointment.status == 'Cancelled' %}bg-red-300{%endif%} px-5 py-3 text-center text-xs font-bold uppercase text-gray-900 transition hover:bg-yellow-400"
+                >
+                    <!-- prettier-ignore -->
+                    {% if appointment.status == 'Pending' and appointment.date < today %}
+                Expired {% else %} {{ appointment.status }} {% endif %}
+                </span>
+            </div>
+        </div>
+    </article>
+</div>
+{% endfor %} {% endblock %}

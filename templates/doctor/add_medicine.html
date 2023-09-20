@@ -1,0 +1,157 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div
+    id="add_medicine_form"
+    class="hidden fixed z-10 inset-0 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+>
+    <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
+        <!--
+      Background overlay, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+        <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            aria-hidden="true"
+        ></div>
+
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+        >
+
+        <!--
+      Modal panel, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        To: "opacity-100 translate-y-0 sm:scale-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100 translate-y-0 sm:scale-100"
+        To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    -->
+        <div
+            class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+        >
+            <form action="" method="post" class="">
+                {% csrf_token %}
+                <div>
+                    <input
+                        type="text"
+                        name="action"
+                        value="addmedicine"
+                        hidden
+                    />
+                    <h1 class="text-xl font-bold print:hidden">
+                        Add New Medicine
+                    </h1>
+                    <div class="mt-4 grid grid-cols-6 gap-4 print:hidden">
+                        <div class="col-span-2">
+                            <label
+                                for="name"
+                                class="block text-sm font-medium text-gray-700"
+                                >Medicine Name</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    type="text"
+                                    name="medicinename"
+                                    id="name"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                    placeholder="Medicine Name"
+                                    aria-describedby="email-description"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label
+                                for="dosage"
+                                class="block text-sm font-medium text-gray-700"
+                                >Dosage</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    type="text"
+                                    name="dosage"
+                                    id="dosage"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                    placeholder="1+1+1"
+                                    aria-describedby="email-description"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label
+                                for="duration"
+                                class="block text-sm font-medium text-gray-700"
+                                >Doses</label
+                            >
+                            <div class="mt-1 relative flex items-center">
+                                <input
+                                    type="text"
+                                    name="duration"
+                                    id="duration"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
+                                />
+                                <div
+                                    class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5"
+                                >
+                                    <kbd
+                                        class="inline-flex items-center border border-gray-200 rounded px-2 text-sm font-sans font-medium text-gray-800"
+                                    >
+                                        Days
+                                    </kbd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-6">
+                            <label
+                                for="instruction"
+                                class="block text-sm font-medium text-gray-700"
+                                >Instruction</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    type="text"
+                                    name="note"
+                                    id="note"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                    placeholder="Instruction"
+                                    aria-describedby="email-description"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense"
+                >
+                    <button
+                        type="submit"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                    >
+                        Add Medicine
+                    </button>
+                    <button
+                        onclick="add_medicine_toggle()"
+                        type="button"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
